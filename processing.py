@@ -28,7 +28,7 @@ def convertDate(date: str) -> str:
     return newDate
 
 
-def doCalculation():
+def doCalculation(date: str, time: str):
     csvFile = open('data.csv')
     myReader = DictReader(csvFile)
 
@@ -45,10 +45,10 @@ def doCalculation():
     x = []
     y = []
     for i in range(len(myData)):
-        date = convertDate(myData[i]['Date'])
+        currDate = convertDate(myData[i]['Date'])
         hour = roundTime(myData[i]['Time'])
 
-        response = urlopen(WEATHER_API + date + '&end_date=' + date)
+        response = urlopen(WEATHER_API + currDate + '&end_date=' + currDate)
         jsonData = loads(response.read())
 
         myData[i]['Weather'] = jsonData['hourly']['temperature_2m'][hour]
@@ -59,8 +59,11 @@ def doCalculation():
         # print(i)
 
     mymodel = poly1d(polyfit(x, y, 2))
-    return sqrt(r2_score(y, mymodel(x)))
 
+    hour = roundTime(time)
+    response = urlopen(WEATHER_API + date + '&end_date=' + date)
+    jsonData = loads(response.read())
+    temp = jsonData['hourly']['temperature_2m'][hour]
 
-if __name__ == '__main__':
-    doCalculation()
+    return round(mymodel(temp), 3)
+    # return sqrt(r2_score(y, mymodel(x)))
