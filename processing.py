@@ -56,10 +56,10 @@ def doCalculation():
         
         x.append(myData[i]['Weather'])
         y.append(myData[i]['Perfect Lap'])
-        print(i)
+        # print(i)
 
     mymodel = poly1d(polyfit(x, y, 2))
-    print(sqrt(r2_score(y, mymodel(x))))
+    return sqrt(r2_score(y, mymodel(x)))
 
 
 if __name__ == '__main__':
