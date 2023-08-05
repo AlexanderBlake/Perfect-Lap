@@ -1,8 +1,7 @@
-import csv
-import json
-import math
-import numpy
-import matplotlib.pyplot as plt
+from csv import DictReader
+from math import sqrt
+from json import loads
+from numpy import poly1d, polyfit
 from urllib.request import urlopen
 from sklearn.metrics import r2_score
 
@@ -31,7 +30,7 @@ def convertDate(date: str) -> str:
 
 def main():
     csvFile = open('data.csv')
-    myReader = csv.DictReader(csvFile)
+    myReader = DictReader(csvFile)
 
     myData = []
     firstRow = True
@@ -50,7 +49,7 @@ def main():
         hour = roundTime(myData[i]['Time'])
 
         response = urlopen(WEATHER_API + date + '&end_date=' + date)
-        data_json = json.loads(response.read())
+        data_json = loads(response.read())
 
         myData[i]['Weather'] = data_json['hourly']['temperature_2m'][hour]
         myData[i]['Perfect Lap'] = float(myData[i]['Perfect Lap'])
@@ -59,8 +58,8 @@ def main():
         y.append(myData[i]['Perfect Lap'])
         print(i)
 
-    mymodel = numpy.poly1d(numpy.polyfit(x, y, 2))
-    print(math.sqrt(r2_score(y, mymodel(x))))
+    mymodel = poly1d(polyfit(x, y, 2))
+    print(sqrt(r2_score(y, mymodel(x))))
 
 
 if __name__ == '__main__':
