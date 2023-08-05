@@ -1,5 +1,5 @@
 from flask import Flask, request
-from processing import do_calculation
+from processing import doCalculation
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
