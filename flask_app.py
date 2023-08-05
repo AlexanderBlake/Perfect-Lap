@@ -20,7 +20,7 @@ def adder_page():
             errors += "<p>{!r} is not a number.</p>\n".format(request.form["number2"])
 
         if number1 is not None and number2 is not None:
-            result = do_calculation()
+            result = doCalculation()
             return '''
                 <html>
                     <body>
