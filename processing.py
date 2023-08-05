@@ -28,7 +28,7 @@ def convertDate(date: str) -> str:
     return newDate
 
 
-def main():
+def doCalculation():
     csvFile = open('data.csv')
     myReader = DictReader(csvFile)
 
@@ -49,9 +49,9 @@ def main():
         hour = roundTime(myData[i]['Time'])
 
         response = urlopen(WEATHER_API + date + '&end_date=' + date)
-        data_json = loads(response.read())
+        jsonData = loads(response.read())
 
-        myData[i]['Weather'] = data_json['hourly']['temperature_2m'][hour]
+        myData[i]['Weather'] = jsonData['hourly']['temperature_2m'][hour]
         myData[i]['Perfect Lap'] = float(myData[i]['Perfect Lap'])
         
         x.append(myData[i]['Weather'])
@@ -63,4 +63,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    doCalculation()
