@@ -2,26 +2,18 @@ from flask import Flask, request
 from processing import doCalculation
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/result", methods=["GET", "POST"])
 def adder_page():
     errors = ""
-    if request.method == "POST":
-        myDateTime = request.form["myDateTime"]
+    if request.method == "POST" or request.method == "GET":
+        # myDateTime = request.form["myDateTime"]
 
         # 2023-08-04T22:15
-        myDateTime = myDateTime.split("T")
-        result = doCalculation(myDateTime[0], myDateTime[1])
+        # myDateTime = myDateTime.split("T")
+        # result = doCalculation(myDateTime[0], myDateTime[1])
 
-        return '''
-            <html>
-                <body>
-                    <p>The result is {result} seconds</p>
-                    <p><a href="/">Click here to calculate again</a>
-                </body>
-            </html>
-        '''.format(result=result)
+        return {"result": [24.48]}
 
     return '''
         <html>
@@ -37,4 +29,4 @@ def adder_page():
     '''.format(errors=errors)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
