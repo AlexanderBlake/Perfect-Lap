@@ -14,8 +14,18 @@ function App() {
         )
     }, [])
 
+    const handleSubmit = (e) => {
+        console.log(e.target[0].value);
+    };
+
     return (
         <div>
+            <p>Enter the day and time of the race:</p>
+            <form method="post" onSubmit={handleSubmit}>
+                <p><input type="datetime-local" name="myDateTime"/></p>
+                <p><input type="submit" value="Calculate Perfect Lap"/></p>
+            </form>
+
             <p>The perfect lap is {data.result} seconds!</p>
         </div>
     )
