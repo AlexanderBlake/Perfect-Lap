@@ -3,6 +3,17 @@ from processing import doCalculation
 
 app = Flask(__name__)
 
+
+@app.route('/test', methods = ['POST'])
+def get_query_from_react():
+    # 2023-08-04T22:15
+    myDateTime = request.get_json()['date']
+    myDateTime = myDateTime.split("T")
+    result = doCalculation(myDateTime[0], myDateTime[1])
+    print(result)
+    return {"result": [result]}
+
+
 @app.route("/result", methods=["GET", "POST"])
 def adder_page():
     errors = ""

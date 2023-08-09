@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import axios from 'axios';
 
 function App() {
     const [data, setData] = useState([{}])
@@ -15,8 +16,18 @@ function App() {
     }, [])
 
     const handleSubmit = (e) => {
-        console.log(e.target[0].value);
-    };
+        e.preventDefault();
+
+        axios.post('/test', {
+            date: e.target[0].value
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
 
     return (
         <div>
