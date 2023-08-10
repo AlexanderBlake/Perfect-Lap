@@ -22,6 +22,7 @@ function App() {
             date: e.target[0].value
           })
           .then(function (response) {
+            setData(response.data)
             console.log(response);
           })
           .catch(function (error) {

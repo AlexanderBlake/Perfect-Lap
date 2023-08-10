@@ -6,38 +6,16 @@ app = Flask(__name__)
 
 @app.route('/test', methods = ['POST'])
 def get_query_from_react():
-    # 2023-08-04T22:15
     myDateTime = request.get_json()['date']
     myDateTime = myDateTime.split("T")
     result = doCalculation(myDateTime[0], myDateTime[1])
-    print(result)
     return {"result": [result]}
 
 
-@app.route("/result", methods=["GET", "POST"])
+@app.route("/result", methods=["GET"])
 def adder_page():
-    errors = ""
-    if request.method == "POST" or request.method == "GET":
-        # myDateTime = request.form["myDateTime"]
+    return {"result": [0]}
 
-        # 2023-08-04T22:15
-        # myDateTime = myDateTime.split("T")
-        # result = doCalculation(myDateTime[0], myDateTime[1])
-
-        return {"result": [24.48]}
-
-    return '''
-        <html>
-            <body>
-                {errors}
-                <p>Enter the day and time of the race:</p>
-                <form method="post" action=".">
-                    <p><input type="datetime-local" name="myDateTime"></p>
-                    <p><input type="submit" value="Calculate Perfect Lap" /></p>
-                </form>
-            </body>
-        </html>
-    '''.format(errors=errors)
 
 if __name__ == "__main__":
     app.run()
