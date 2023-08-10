@@ -9,7 +9,7 @@ WEATHER_API = 'https://api.open-meteo.com/v1/forecast?latitude=35.933414&longitu
 
 
 def roundTime(time: str) -> int:
-    splitTime = time.split(":")
+    splitTime = time.split(':')
     result = int(splitTime[0])
     if int(splitTime[1]) >= 30:
         result += 1
@@ -28,7 +28,7 @@ def convertDate(date: str) -> str:
     return newDate
 
 
-def doCalculation(date: str, time: str):
+def doCalculation(date: str, time: str) -> float:
     csvFile = open('data.csv')
     myReader = DictReader(csvFile)
 

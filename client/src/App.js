@@ -5,7 +5,7 @@ function App() {
     const [data, setData] = useState([{}])
 
     useEffect(() => {
-        fetch("/result").then(
+        fetch('/result').then(
             res => res.json()
         ).then(
             data => {
@@ -33,9 +33,9 @@ function App() {
     return (
         <div>
             <p>Enter the day and time of the race:</p>
-            <form method="post" onSubmit={handleSubmit}>
-                <p><input type="datetime-local" name="myDateTime"/></p>
-                <p><input type="submit" value="Calculate Perfect Lap"/></p>
+            <form method='post' onSubmit={handleSubmit}>
+                <p><input type='datetime-local' name='myDateTime'/></p>
+                <p><input type='submit' value='Calculate Perfect Lap'/></p>
             </form>
 
             <p>The perfect lap is {data.result} seconds!</p>
