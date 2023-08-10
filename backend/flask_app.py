@@ -4,9 +4,9 @@ from processing import doCalculation
 app = Flask(__name__)
 
 
-@app.route('/test', methods = ['POST'])
+@app.route("/test", methods = ["POST"])
 def get_query_from_react():
-    myDateTime = request.get_json()['date']
+    myDateTime = request.get_json()["date"]
     myDateTime = myDateTime.split("T")
     result = doCalculation(myDateTime[0], myDateTime[1])
     return {"result": [result]}
