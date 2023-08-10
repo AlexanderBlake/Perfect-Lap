@@ -21,9 +21,9 @@ function App() {
         axios.post('/test', {
             date: e.target[0].value
           })
-          .then(function (response) {
+          .then(function(response) {
             setData(response.data)
-            console.log(response);
+            // console.log(response);
           })
           .catch(function (error) {
             console.log(error);
