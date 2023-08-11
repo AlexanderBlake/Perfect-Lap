@@ -4,16 +4,6 @@ import axios from 'axios';
 
 function App() {
     const [data, setData] = useState([{}])
-    const styles = {
-        main: {
-          backgroundColor: "#f1f1f1",
-          width: "100%",
-        },
-        inputText: {
-          padding: "10px",
-          color: "red",
-        },
-      };
 
     useEffect(() => {
         fetch('/result').then(
@@ -42,7 +32,7 @@ function App() {
     }
 
     return (
-        <div className={styles.main}>
+        <div className="AppHeader">
             <p>Enter the day and time of the race:</p>
             <form method='post' onSubmit={handleSubmit}>
                 <p><input type='datetime-local' name='myDateTime'/></p>
