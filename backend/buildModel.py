@@ -1,4 +1,4 @@
-import csv
+from csv import writer, reader
 from json import loads
 from urllib.request import urlopen
 
@@ -27,7 +27,7 @@ def convertDate(date: str) -> str:
 
 def buildModel():
     csvFile = open('data.csv', 'r')
-    myReader = csv.reader(csvFile)
+    myReader = reader(csvFile)
 
     myData = []
     for row in myReader:
@@ -36,8 +36,8 @@ def buildModel():
     csvFile.close()
 
     csvFile = open('test.csv', 'w')
-    myWriter = csv.writer(csvFile)
-        
+    myWriter = writer(csvFile)
+ 
     firstRow = True
     for row in myData:
         if not firstRow:
