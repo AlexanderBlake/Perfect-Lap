@@ -17,46 +17,21 @@ def roundTime(time: str) -> int:
     return result
 
 
-def convertDate(date: str) -> str:
-    splitDate = date.split('/')
-    
-    newDate = '20' + splitDate[2] + '-'
-    if int(splitDate[0]) < 10:
-        newDate += '0'
-    newDate += splitDate[0] + '-' + splitDate[1]
-
-    return newDate
-
-
 def doCalculation(date: str, time: str) -> float:
-    csvFile = open('data.csv')
+    csvFile = open('test.csv')
     myReader = DictReader(csvFile)
 
-    myData = []
+    x = []
+    y = []
     firstRow = True
     for row in myReader:
         if not firstRow:
-            myData.append(row)
+            x.append(float(row['Weather']))
+            y.append(float(row['Perfect Lap']))
         else:
             firstRow = False
 
     csvFile.close()
-    
-    x = []
-    y = []
-    for i in range(len(myData)):
-        currDate = convertDate(myData[i]['Date'])
-        hour = roundTime(myData[i]['Time'])
-
-        response = urlopen(WEATHER_API + currDate + '&end_date=' + currDate)
-        jsonData = loads(response.read())
-
-        myData[i]['Weather'] = jsonData['hourly']['temperature_2m'][hour]
-        myData[i]['Perfect Lap'] = float(myData[i]['Perfect Lap'])
-        
-        x.append(myData[i]['Weather'])
-        y.append(myData[i]['Perfect Lap'])
-        # print(i)
 
     mymodel = poly1d(polyfit(x, y, 2))
 
