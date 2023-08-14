@@ -33,13 +33,15 @@ function App() {
 
     return (
         <div className="AppHeader">
-            <p>Enter the day and time of the race:</p>
+            <h1>Vegas Superkarts Perfect Lap Generator</h1>
+            <h3>Enter the day and time of the race:</h3>
             <form method='post' onSubmit={handleSubmit}>
                 <p><input type='datetime-local' name='myDateTime'/></p>
                 <p><input type='submit' value='Calculate Perfect Lap'/></p>
             </form>
 
-            <p>The perfect lap is {data.result} seconds!</p>
+            <h3>The perfect lap is {data.result} seconds!</h3>
+            <p>The model uses weather data and previous past perfect laps to predict a new perfect lap.</p>
         </div>
     )
 }
