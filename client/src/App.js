@@ -6,7 +6,7 @@ function App() {
     const [data, setData] = useState([{}])
 
     useEffect(() => {
-        fetch('/result').then(
+        fetch('http://localhost:5000/result').then(
             res => res.json()
         ).then(
             data => {
@@ -19,7 +19,7 @@ function App() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('/test', {
+        axios.post('http://localhost:5000/test', {
             date: e.target[0].value
           })
           .then(function(response) {

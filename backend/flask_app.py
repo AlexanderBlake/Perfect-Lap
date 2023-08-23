@@ -1,8 +1,10 @@
+from waitress import serve
+from flask_cors import CORS
 from flask import Flask, request
 from processing import doCalculation
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/test', methods = ['POST'])
 def get_query_from_react():
@@ -18,4 +20,4 @@ def adder_page():
 
 
 if __name__ == '__main__':
-    app.run()
+    serve(app, host='localhost', port=5000)
