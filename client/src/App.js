@@ -6,7 +6,7 @@ function App() {
     const [data, setData] = useState([{}])
 
     useEffect(() => {
-        fetch('http://alexanderblake.pythonanywhere.com/result').then(
+        fetch('https://alexanderblake.pythonanywhere.com/result').then(
             res => res.json()
         ).then(
             data => {
@@ -19,7 +19,7 @@ function App() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://alexanderblake.pythonanywhere.com/test', {
+        axios.post('https://alexanderblake.pythonanywhere.com/test', {
             date: e.target[0].value
           })
           .then(function(response) {
