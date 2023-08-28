@@ -42,5 +42,7 @@ def doCalculation(date: str, time: str) -> float:
     # print(r2_score(y, mymodel(x)))
     return round(mymodel(temp), 3)
 
+'''
 if __name__ == "__main__":
     doCalculation('2023-08-27', '8:56')
+'''
