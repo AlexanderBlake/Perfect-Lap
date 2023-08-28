@@ -1,9 +1,8 @@
 from csv import DictReader
-from math import sqrt
 from json import loads
 from numpy import poly1d, polyfit
 from urllib.request import urlopen
-from sklearn.metrics import r2_score
+# from sklearn.metrics import r2_score
 
 WEATHER_API = 'https://api.open-meteo.com/v1/forecast?latitude=35.933414&longitude=-115.187326&hourly=temperature_2m&temperature_unit=fahrenheit&timezone=America%2FLos_Angeles&forecast_days=1&start_date='
 
@@ -40,5 +39,8 @@ def doCalculation(date: str, time: str) -> float:
     jsonData = loads(response.read())
     temp = jsonData['hourly']['temperature_2m'][hour]
 
+    # print(r2_score(y, mymodel(x)))
     return round(mymodel(temp), 3)
-    # return sqrt(r2_score(y, mymodel(x)))
+
+if __name__ == "__main__":
+    doCalculation('2023-08-27', '8:56')
