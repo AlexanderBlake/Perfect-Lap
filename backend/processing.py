@@ -40,7 +40,7 @@ def doCalculation(date: str, time: str) -> float:
     temp = jsonData['hourly']['temperature_2m'][hour]
 
     # print(r2_score(y, mymodel(x)))
-    return round(mymodel(temp), 3)
+    return round(mymodel(temp), 3), temp
 
 '''
 if __name__ == "__main__":

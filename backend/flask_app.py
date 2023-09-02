@@ -10,8 +10,8 @@ CORS(app)
 def get_query_from_react():
     myDateTime = request.get_json()['date']
     myDateTime = myDateTime.split('T')
-    result = doCalculation(myDateTime[0], myDateTime[1])
-    return {'result': [result]}
+    result, weather = doCalculation(myDateTime[0], myDateTime[1])
+    return {'result': [result], 'weather': [weather]}
 
 
 @app.route('/result', methods=['GET'])

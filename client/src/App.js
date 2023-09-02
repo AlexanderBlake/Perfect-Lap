@@ -24,7 +24,7 @@ function App() {
           })
           .then(function(response) {
             setData(response.data)
-            // console.log(response);
+            console.log(response);
           })
           .catch(function (error) {
             console.log(error);
