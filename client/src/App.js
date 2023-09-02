@@ -41,6 +41,7 @@ function App() {
             </form>
 
             <h3>The perfect lap is {data.result} seconds!</h3>
+            <h4>The temperature will be {data.weather}°F.</h4>
             <p>The model uses weather data and previous past perfect laps to predict a new perfect lap.</p>
         </div>
     )

@@ -16,7 +16,7 @@ def get_query_from_react():
 
 @app.route('/result', methods=['GET'])
 def adder_page():
-    return {'result': [0]}
+    return {'result': [0], 'weather': [0]}
 
 
 if __name__ == '__main__':
