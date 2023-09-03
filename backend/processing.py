@@ -5,7 +5,7 @@ from csv import DictReader
 from numpy import poly1d, polyfit
 from urllib.request import urlopen
 # from sklearn.metrics import r2_score
-# from matplotlib.pyplot import plot, title, show, scatter
+# from matplotlib.pyplot import plot, title, show, scatter, xlabel, ylabel
 
 
 WEATHER_API = 'https://api.open-meteo.com/v1/forecast?latitude=35.933414&longitude=-115.187326&hourly=temperature_2m&temperature_unit=fahrenheit&timezone=America%2FLos_Angeles&forecast_days=1&start_date='
@@ -44,12 +44,17 @@ def doCalculation(date: str, time: str) -> float:
     temp = jsonData['hourly']['temperature_2m'][hour]
 
     # scatter(x, y)
+
     # regressionX = linspace(40, 100)
     # plot(regressionX, mymodel(regressionX), color='red')
+    
     # title('R: ' + str(round(sqrt(r2_score(y, mymodel(x))), 4)))
+    # xlabel('Temperature in °F')
+    # ylabel('Perfect Lap Time')
     # show()
+
     return round(mymodel(temp), 3), temp
 
 
-if __name__ == '__main__':
-    doCalculation('2023-08-27', '8:56')
+# if __name__ == '__main__':
+#    doCalculation('2023-08-27', '8:56')
