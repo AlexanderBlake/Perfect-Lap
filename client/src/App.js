@@ -34,7 +34,7 @@ function App() {
     return (
         <div className="AppHeader">
             <h1>Vegas Superkarts Perfect Lap Generator</h1>
-            <h3>Enter the day and time of the race:</h3>
+            <h3>Enter the day and time of the race</h3>
             <form method='post' onSubmit={handleSubmit}>
                 <p><input type='datetime-local' name='myDateTime'/></p>
                 <p><input type='submit' value='Calculate Perfect Lap'/></p>
