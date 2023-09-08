@@ -25,6 +25,14 @@
   color: white;
 }
 
+input[type=submit] {
+  font-size: calc(10px + 2vmin);
+}
+
+input[type=datetime-local] {
+  font-size: calc(10px + 2vmin);
+}
+
 .App-link {
   color: #61dafb;
 }
