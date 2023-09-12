@@ -48,7 +48,7 @@ def doCalculation(date: str, time: str) -> float:
     # regressionX = linspace(40, 100)
     # plot(regressionX, mymodel(regressionX), color='red')
     
-    # title('R: ' + str(round(sqrt(r2_score(y, mymodel(x))), 4)))
+    # title('R-value: ' + str(round(sqrt(r2_score(y, mymodel(x))), 4)))
     # xlabel('Temperature in °F')
     # ylabel('Perfect Lap Time')
     # show()
