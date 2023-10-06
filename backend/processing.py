@@ -1,7 +1,7 @@
 # from math import sqrt
 from json import loads
 from csv import DictReader
-# from numpy import linspace
+# from numpy import linspace, median
 from numpy import poly1d, polyfit
 from urllib.request import urlopen
 # from sklearn.metrics import r2_score
@@ -20,7 +20,7 @@ def roundTime(time: str) -> int:
     return result
 
 
-def doCalculation(date: str, time: str) -> float:
+def doCalculation(date: str, time: str):
     csvFile = open('test.csv')
     myReader = DictReader(csvFile)
 
@@ -55,7 +55,26 @@ def doCalculation(date: str, time: str) -> float:
     show()
     '''
 
+    '''
+    differences = []
+    absDiffs = []
+    for i in range(len(x)):
+        differences.append(mymodel(x[i]) - y[i])
+        absDiffs.append(abs(mymodel(x[i]) - y[i]))
+
+    print(median(differences))
+    print(sum(differences) / len(differences))
+    print(max(differences))
+    print(min(differences))
+
+    print()
+    print(median(absDiffs))
+    print(sum(absDiffs) / len(absDiffs))
+    print(max(absDiffs))
+    '''
+
     return round(mymodel(temp), 3), temp
+
 
 '''
 if __name__ == '__main__':

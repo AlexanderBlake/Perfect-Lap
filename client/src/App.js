@@ -40,7 +40,7 @@ function App() {
                 <p><input type='submit' value='Calculate Perfect Lap'/></p>
             </form>
 
-            <h3>The perfect lap is {data.result} seconds!<br></br>
+            <h3>The perfect lap is {data.result} ± 0.0859 seconds!<br></br>
             The temperature will be {data.weather}°F.</h3>
             <p>The model uses weather data and previous past perfect laps to predict a new perfect lap.</p>
         </div>
