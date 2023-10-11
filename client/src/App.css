@@ -14,7 +14,7 @@
 }
 
 .AppHeader {
-  background-color: #282c34;
+  background-color: #FCDAA7;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,11 +22,11 @@
   text-align: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 .AppHeader1 {
-  background-color: #282c34;
+  background-color: #FCDAA7;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -34,7 +34,7 @@
   text-align: left;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 input[type=submit] {
