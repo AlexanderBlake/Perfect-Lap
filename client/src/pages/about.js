@@ -25,8 +25,6 @@ const About = () => {
             <p>A quadratic regression model is used because experience tells us that there is an optimal temperature window for peak performance. A race track that is too hot or too cold will negatively impact tire performance. This is turn leads to less grip leading to drivers losing lap time.<br></br><br></br>
             The model currently has an R-value of 0.603.<br></br>
             </p>
-
-            <img src="../Figure_1.png" alt="Regression Plot"></img><br></br>
         </div>
     );
 };
