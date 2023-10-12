@@ -15,19 +15,19 @@
 
 .AppHeader {
   background-color: #FCDAA7;
-  min-height: 100vh;
+  min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  justify-content: center;
+  justify-content: start;
   font-size: calc(10px + 2vmin);
   color: black;
 }
 
 .AppHeader1 {
   background-color: #FCDAA7;
-  min-height: 100vh;
+  min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
