@@ -19,6 +19,4 @@ The model will need to take in the data of the fastest laps of a session and how
 ## Quadratic Regression Model
 A quadratic regression model is used because experience tells us that there is an optimal temperature window for peak performance. A race track that is too hot or too cold will negatively impact tire performance. This is turn leads to less grip leading to drivers losing lap time.
 
-The model currently has an R-value of 0.603.
-
 ![Regression Plot](./client/src/Figure_1.png)
