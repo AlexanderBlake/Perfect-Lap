@@ -17,6 +17,6 @@ Basically, as more and more laps are completed over the course of the race day, 
 The model will need to take in the data of the fastest laps of a session and how it changed throughout the session as well as what session of the day the session was.
 
 ## Quadratic Regression Model
-A quadratic regression model is used because experience tells us that there is an optimal temperature window for peak performance. A race track that is too hot or too cold will negatively impact tire performance. This is turn leads to less grip leading to drivers losing lap time.
+A quadratic regression model is used because experience tells us that there is an optimal temperature window for peak performance.
 
 ![Regression Plot](./client/src/Figure_1.png)
