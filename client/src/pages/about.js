@@ -24,9 +24,8 @@ const About = () => {
             </p>
 
             <h2>Quadratic Regression Model</h2>
-            <p>A quadratic regression model is used because experience tells us that there is an optimal temperature window for peak performance. A race track that is too hot or too cold will negatively impact tire performance. This is turn leads to less grip leading to drivers losing lap time.<br></br>
+            <p>A quadratic regression model is used because experience tells us that there is an optimal temperature window for peak performance.<br></br>
             </p>
-
             <img src={plot} alt="Regression Plot" /><br></br>
         </div>
     );
