@@ -45,7 +45,7 @@ def doCalculation(date: str, time: str):
     '''
     scatter(x, y)
 
-    regressionX = linspace(40, 100)
+    regressionX = linspace(37.7, 100.7)
     plot(regressionX, mymodel(regressionX), color='red')
     
     title('R^2-value: ' + str(round(r2_score(y, mymodel(x)), 4)))
