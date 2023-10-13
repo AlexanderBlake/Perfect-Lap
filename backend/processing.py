@@ -1,4 +1,3 @@
-# from math import sqrt
 from json import loads
 from csv import DictReader
 # from numpy import linspace, median
@@ -21,7 +20,7 @@ def roundTime(time: str) -> int:
 
 
 def doCalculation(date: str, time: str):
-    csvFile = open('test.csv')
+    csvFile = open('data.csv')
     myReader = DictReader(csvFile)
 
     x = []
@@ -49,25 +48,15 @@ def doCalculation(date: str, time: str):
     regressionX = linspace(40, 100)
     plot(regressionX, mymodel(regressionX), color='red')
     
-    title('R-value: ' + str(round(sqrt(r2_score(y, mymodel(x))), 4)))
+    title('R^2-value: ' + str(round(r2_score(y, mymodel(x)), 4)))
     xlabel('Temperature in °F')
     ylabel('Perfect Lap Time')
     show()
-    '''
-
-    '''
-    differences = []
+    
     absDiffs = []
     for i in range(len(x)):
-        differences.append(mymodel(x[i]) - y[i])
         absDiffs.append(abs(mymodel(x[i]) - y[i]))
 
-    print(median(differences))
-    print(sum(differences) / len(differences))
-    print(max(differences))
-    print(min(differences))
-
-    print()
     print(median(absDiffs))
     print(sum(absDiffs) / len(absDiffs))
     print(max(absDiffs))
@@ -75,8 +64,7 @@ def doCalculation(date: str, time: str):
 
     return round(mymodel(temp), 3), temp
 
-
 '''
 if __name__ == '__main__':
-    print(doCalculation('2023-10-04', '8:56'))
+    print(doCalculation('2023-10-13', '12:05'))
 '''

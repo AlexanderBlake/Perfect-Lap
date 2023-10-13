@@ -2,8 +2,7 @@ from csv import writer, reader
 from json import loads
 from urllib.request import urlopen
 
-WEATHER_API = 'https://api.open-meteo.com/v1/forecast?latitude=35.933414&longitude=-115.187326&hourly=temperature_2m&temperature_unit=fahrenheit&timezone=America%2FLos_Angeles&forecast_days=1&start_date='
-
+WEATHER_API = 'https://archive-api.open-meteo.com/v1/era5?latitude=35.933414&longitude=-115.187326&hourly=temperature_2m&temperature_unit=fahrenheit&timezone=America%2FLos_Angeles&start_date='
 
 def roundTime(time: str) -> int:
     splitTime = time.split(':')
@@ -26,7 +25,7 @@ def convertDate(date: str) -> str:
 
 
 def buildModel():
-    csvFile = open('data.csv', 'r')
+    csvFile = open('raw.csv', 'r')
     myReader = reader(csvFile)
 
     myData = []
@@ -35,22 +34,22 @@ def buildModel():
 
     csvFile.close()
 
-    csvFile = open('test.csv', 'w')
+    csvFile = open('raw.csv', 'w')
     myWriter = writer(csvFile)
- 
-    firstRow = True
+
     for row in myData:
-        if not firstRow:
+        if not row[5]:
             currDate = convertDate(row[0])
             hour = roundTime(row[1])
 
             response = urlopen(WEATHER_API + currDate + '&end_date=' + currDate)
             jsonData = loads(response.read())
 
-            myWriter.writerow(row + [jsonData['hourly']['temperature_2m'][hour]])
+            myWriter.writerow(row[:-1] + [jsonData['hourly']['temperature_2m'][hour]])
+            print(row[:-1] + [jsonData['hourly']['temperature_2m'][hour]])
+
         else:
-            myWriter.writerow(row + ['Weather'])
-            firstRow = False
+            myWriter.writerow(row)
 
     csvFile.close()
 

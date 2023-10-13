@@ -40,7 +40,7 @@ const Home = () => {
                 <p><input type='submit' value='Calculate Perfect Lap'/></p>
             </form>
 
-            <h3>The perfect lap is {data.result} ± 0.086 seconds!<br></br>
+            <h3>The perfect lap is {data.result} ± 0.155 seconds!<br></br>
             The temperature will be {data.weather}°F.</h3>
         </div>
     );
