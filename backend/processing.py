@@ -48,7 +48,7 @@ def doCalculation(date: str, time: str):
     regressionX = linspace(37.7, 100.7)
     plot(regressionX, mymodel(regressionX), color='red')
     
-    title('R^2-value: ' + str(round(r2_score(y, mymodel(x)), 4)))
+    title('R^2-value: ' + str(round(r2_score(y, mymodel(x)), 4)) + '\nSample size: n = ' + str(len(y)))
     xlabel('Temperature in °F')
     ylabel('Perfect Lap Time')
     show()
@@ -66,5 +66,5 @@ def doCalculation(date: str, time: str):
 
 '''
 if __name__ == '__main__':
-    print(doCalculation('2023-10-13', '12:05'))
+    print(doCalculation('2023-11-13', '12:05'))
 '''
