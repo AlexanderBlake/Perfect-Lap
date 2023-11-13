@@ -47,8 +47,13 @@ def doCalculation(date: str, time: str):
 
     regressionX = linspace(37.7, 100.7)
     plot(regressionX, mymodel(regressionX), color='red')
+
+    myTitle = 'R^2-value: ' + str(round(r2_score(y, mymodel(x)), 4))
+    myTitle += '\nSample size: n = ' + str(len(y))
+    myTitle += '\nDomain of Temperatures: [' + str(min(x)) + ', ' + str(max(x)) + '] °F'
+    myTitle += '\nRange of Times: [' + str(min(y)) + ', ' + str(max(y)) + '] seconds'
     
-    title('R^2-value: ' + str(round(r2_score(y, mymodel(x)), 4)) + '\nSample size: n = ' + str(len(y)))
+    title(myTitle)
     xlabel('Temperature in °F')
     ylabel('Perfect Lap Time')
     show()
