@@ -11,14 +11,15 @@ import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 from sklearn import tree
+from sklearn.dummy import DummyRegressor
 from sklearn.svm import LinearSVR, NuSVR, SVR
-from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import cross_val_score, KFold, train_test_split
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor
+from sklearn.model_selection import cross_val_score, train_test_split
 
+DEPTH = 15
 RANDOM = 42
 SCORE = 'neg_root_mean_squared_error'
 
@@ -32,6 +33,7 @@ def preprocess_data(data):
     Returns:
     bool: Description of the return value.
     '''
+
     data = data.groupby(['Race 1 DateTime'])
     scaler = MinMaxScaler()
 
@@ -44,13 +46,14 @@ def preprocess_data(data):
         scaled_groups.append(group)
 
     data = pd.concat(scaled_groups)
+    data['Final Temp'] = scaler.fit_transform(data[['Final Temp']])
 
     for col in ['Race 1 Kart Num', 'Final Kart Num', 'Driver Name']:
         one_hot_encoded = pd.get_dummies(data[col], prefix=col)
         data = pd.concat([data, one_hot_encoded], axis=1)
 
-    x_data = data[['Final Starting Pos', 'Race 1 Fastest Time', 'Race 1 Gap to Leader'] +
-                  list(data.filter(regex='Driver Name_').columns)]
+    x_data = data[['Final Starting Pos', 'Race 1 Fastest Time', 'Race 1 Gap to Leader', 'Final Temp', 'Drivers in Field'] +
+                  list(data.filter(regex='Final Kart Num_|Race 1 Kart Num_|Track|Driver Name_').columns)]
     y_data = data['Final Finish Pos']
 
     return x_data, y_data
@@ -69,26 +72,23 @@ def conduct_experiments(x_data, y_data) -> list:
     results = []
 
     models = [(KNeighborsRegressor(), 'KNN'),
+              (GradientBoostingRegressor(random_state=RANDOM), 'Gradient Boosting'),
+              (HistGradientBoostingRegressor(random_state=RANDOM), 'Histogram Gradient Boosting'),
+              (DummyRegressor(), 'BASELINE: Dummy Regressor'),
               (LinearSVR(random_state=RANDOM, dual='auto', max_iter=8000), 'Linear SVM')]
     for model, name in models:
         results.append((-1 * cross_val_score(model, x_data, y_data, scoring=SCORE).mean(), name))
 
-    for depth in range(1, 9):
+    for depth in range(1, 24):
         results.append((-1 * cross_val_score(
             RandomForestRegressor(random_state=RANDOM, max_depth=depth), x_data, y_data,
-            scoring=SCORE).mean(), 'Random Forest Max Depth: ' + str(depth)))
+            scoring=SCORE).mean(), 'Random Forest Depth: ' + str(depth)))
 
     for kern in ['rbf', 'linear', 'poly', 'sigmoid']:
         results.append((-1 * cross_val_score(NuSVR(kernel=kern), x_data, y_data,
                                              scoring=SCORE).mean(), 'NU SVM Kernel: ' + kern))
         results.append((-1 * cross_val_score(SVR(kernel=kern), x_data, y_data,
                                              scoring=SCORE).mean(), 'SVM Kernel: ' + kern))
-
-    k_fold = KFold()
-    temp = 0
-    for _, (_, test_index) in enumerate(k_fold.split(x_data)):
-        temp += sqrt(mean_squared_error(np.full(len(test_index), 6), y_data.iloc[test_index]))
-    results.append((temp / 5, 'BASELINE: Median Guessing'))
 
     '''
     for ac in ['relu', 'identity', 'logistic', 'tanh']:
@@ -125,16 +125,17 @@ def find_importances(x_data, regr) -> list:
     '''
 
     results = []
-    importances = {'Driver Name': 0, 'Final Kart Num': 0, 'Track': 0}
+    importances = {'Driver Name': 0, 'Final Kart Num': 0, 'Track': 0, 'Race 1 Kart Num': 0}
 
     for i, col in enumerate(x_data.columns):
-        if 'Driver Name' in col:
-            importances['Driver Name'] += regr.feature_importances_[i]
-        elif 'Final Kart Num' in col:
-            importances['Final Kart Num'] += regr.feature_importances_[i]
-        elif 'Track' in col:
-            importances['Track'] += regr.feature_importances_[i]
-        else:
+        key_present = False
+        for key in importances:
+            if key in col:
+                importances[key] += regr.feature_importances_[i]
+                key_present = True
+                break
+
+        if not key_present:
             results.append((regr.feature_importances_[i], col))
 
     for key, value in importances.items():
@@ -185,7 +186,7 @@ def main() -> None:
     display_table(['Rank', 'Model Description', 'Root Mean Square Error (RMSE)'], results)
 
     x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, random_state=RANDOM)
-    regr = RandomForestRegressor(random_state=RANDOM, max_depth=2).fit(x_train, y_train)
+    regr = RandomForestRegressor(random_state=RANDOM, max_depth=DEPTH).fit(x_train, y_train)
 
     y_pred = regr.predict(x_test)
 
@@ -200,7 +201,7 @@ def main() -> None:
     plt.savefig('decision_tree_plot.png')
 
     results = find_importances(x_data, regr)
-    display_table(['Rank', 'Feature', 'Importances'], results)
+    display_table(['Rank', 'Feature', 'Importance'], results)
 
     print(len(x_data.columns))
 
