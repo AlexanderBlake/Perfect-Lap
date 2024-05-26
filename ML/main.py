@@ -1,39 +1,44 @@
-'''
-This module conducts machine learning experiments to find the best model and
-the most important features.
-'''
-
-from math import sqrt
-
-import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 from sklearn import tree
+from sklearn.svm import NuSVR
 from sklearn.dummy import DummyRegressor
-from sklearn.svm import LinearSVR, NuSVR, SVR
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.model_selection import cross_val_score, train_test_split
 
-DEPTH = 15
+DEPTH = 5
 RANDOM = 42
 SCORE = 'neg_root_mean_squared_error'
 
+def predict(x_data, y_data, final_starting_pos, race1_fastest_time, race1_min_fastest_time, race1_max_fastest_time, race1_gap_to_leader, race1_gap_to_leader_min, race1_gap_to_leader_max, driver_name):
+    model = NuSVR(kernel='linear').fit(x_data, y_data)
+
+    race1_fastest_time = (race1_fastest_time - race1_min_fastest_time) / (race1_max_fastest_time - race1_min_fastest_time)
+    race1_gap_to_leader = (race1_gap_to_leader - race1_gap_to_leader_min) / (race1_gap_to_leader_max - race1_gap_to_leader_min)
+
+    manual_input = {
+    'Final Starting Pos': final_starting_pos,
+    'Race 1 Fastest Time': race1_fastest_time,
+    'Race 1 Gap to Leader': race1_gap_to_leader,
+    }
+
+    for col in x_data.columns:
+        if 'Driver Name_' in col:
+            manual_input[col] = False
+
+    manual_input['Driver Name_' + driver_name] = True
+
+    input_df = pd.DataFrame([manual_input])
+
+    return model.predict(input_df)
+
 def preprocess_data(data):
-    '''
-    This function performs some operation.
-
-    Parameters:
-    data (int): Description of param1.
-
-    Returns:
-    bool: Description of the return value.
-    '''
-
     data = data.groupby(['Race 1 DateTime'])
     scaler = MinMaxScaler()
 
@@ -48,84 +53,34 @@ def preprocess_data(data):
     data = pd.concat(scaled_groups)
     data['Final Temp'] = scaler.fit_transform(data[['Final Temp']])
 
-    for col in ['Race 1 Kart Num', 'Final Kart Num', 'Driver Name']:
+    for col in ['Final Kart Num', 'Race 1 Kart Num', 'Driver Name']:
         one_hot_encoded = pd.get_dummies(data[col], prefix=col)
         data = pd.concat([data, one_hot_encoded], axis=1)
 
-    x_data = data[['Final Starting Pos', 'Race 1 Fastest Time', 'Race 1 Gap to Leader', 'Final Temp', 'Drivers in Field'] +
-                  list(data.filter(regex='Final Kart Num_|Race 1 Kart Num_|Track|Driver Name_').columns)]
+    x_data = data[['Final Starting Pos', 'Race 1 Fastest Time', 'Race 1 Gap to Leader'] +
+                  list(data.filter(regex='Driver Name_').columns)]
     y_data = data['Final Finish Pos']
 
     return x_data, y_data
 
-def conduct_experiments(x_data, y_data) -> list:
-    '''
-    This function performs some operation.
-
-    Parameters:
-    x_data (int): Description of param1.
-    y_data (str): Description of param2.
-
-    Returns:
-    list: Description of the return value.
-    '''
+def conduct_experiments(x_data, y_data):
     results = []
 
-    models = [(KNeighborsRegressor(), 'KNN'),
+    models = [(DummyRegressor(), 'BASELINE: Dummy Regressor'),
+              (KNeighborsRegressor(), 'KNN: K-Nearest Neighbors'),
+              (NuSVR(kernel='linear'), 'SVM (Support Vector Machine)'),
               (GradientBoostingRegressor(random_state=RANDOM), 'Gradient Boosting'),
-              (HistGradientBoostingRegressor(random_state=RANDOM), 'Histogram Gradient Boosting'),
-              (DummyRegressor(), 'BASELINE: Dummy Regressor'),
-              (LinearSVR(random_state=RANDOM, dual='auto', max_iter=8000), 'Linear SVM')]
+              (RandomForestRegressor(random_state=RANDOM, max_depth=DEPTH), 'Random Forest'),
+              (MLPRegressor(random_state=RANDOM, activation='identity', solver='sgd', learning_rate='adaptive', max_iter=3200), 'Neural Network')]
     for model, name in models:
         results.append((-1 * cross_val_score(model, x_data, y_data, scoring=SCORE).mean(), name))
-
-    for depth in range(1, 24):
-        results.append((-1 * cross_val_score(
-            RandomForestRegressor(random_state=RANDOM, max_depth=depth), x_data, y_data,
-            scoring=SCORE).mean(), 'Random Forest Depth: ' + str(depth)))
-
-    for kern in ['rbf', 'linear', 'poly', 'sigmoid']:
-        results.append((-1 * cross_val_score(NuSVR(kernel=kern), x_data, y_data,
-                                             scoring=SCORE).mean(), 'NU SVM Kernel: ' + kern))
-        results.append((-1 * cross_val_score(SVR(kernel=kern), x_data, y_data,
-                                             scoring=SCORE).mean(), 'SVM Kernel: ' + kern))
-
-    '''
-    for ac in ['relu', 'identity', 'logistic', 'tanh']:
-        for so in ['lbfgs', 'sgd', 'adam']:
-            for lr in ['constant', 'invscaling', 'adaptive']:
-                if so == 'sgd':
-                    results.append((-1 * cross_val_score(
-                        MLPRegressor(random_state=RANDOM, max_iter=6400, activation=ac,
-                                     solver=so, learning_rate=lr), x_data, y_data,
-                                     scoring='neg_root_mean_squared_error').mean(),
-                                     'Neural Network ' + ac + ' ' + so + ' ' + lr))
-                else:
-                    results.append((-1 * cross_val_score(
-                        MLPRegressor(random_state=RANDOM, max_iter=6400, activation=ac,
-                                     solver=so), x_data, y_data,
-                                     scoring='neg_root_mean_squared_error').mean(),
-                                     'Neural Network ' + ac + ' ' + so + ' ' + lr))
-                    break
-    '''
 
     results.sort()
     return results
 
-def find_importances(x_data, regr) -> list:
-    '''
-    This function performs some operation.
-
-    Parameters:
-    x_data (int): Description of param1.
-    regr (str): Description of param2.
-
-    Returns:
-    list: Description of the return value.
-    '''
-
+def find_importances(x_data, regr):
     results = []
-    importances = {'Driver Name': 0, 'Final Kart Num': 0, 'Track': 0, 'Race 1 Kart Num': 0}
+    importances = {'Driver Name': 0}
 
     for i, col in enumerate(x_data.columns):
         key_present = False
@@ -144,41 +99,21 @@ def find_importances(x_data, regr) -> list:
     results.sort(reverse=True)
     return results
 
-def display_table(header: list[str], results: list) -> None:
-    '''
-    This function prints a pretty table.
-
-    Parameters:
-    header (list[str]): Description of param1.
-    results (list): Description of param2.
-
-    Returns:
-    None
-    '''
+def display_table(header, results):
     pt_table = PrettyTable(header)
 
     for i, result in enumerate(results):
         value, name = result
         if 'BASELINE' in name:
             pt_table.add_row(['','',''])
-        pt_table.add_row([i + 1, name, value])
+        pt_table.add_row([i + 1, name, round(value, 4)])
         if 'BASELINE' in name:
             pt_table.add_row(['','',''])
 
     print(pt_table)
     print()
 
-def main() -> None:
-    '''
-    This function runs the program.
-
-    Parameters:
-    None
-
-    Returns:
-    None
-    '''
-
+def main():
     data = pd.read_csv('VSK - Sheet1.csv')
     x_data, y_data = preprocess_data(data)
     results = conduct_experiments(x_data, y_data)
@@ -199,10 +134,18 @@ def main() -> None:
     plt.figure(figsize=(100, 100))
     tree.plot_tree(regr.estimators_[0], feature_names=x_data.columns, filled=True)
     plt.savefig('decision_tree_plot.png')
+    plt.close()
+
+    plt.figure(figsize=(15, 12))
+    sns.heatmap(data[['Final Starting Pos', 'Race 1 Fastest Time', 'Race 1 Gap to Leader', 'Final Temp', 'Final Finish Pos', 'Pos Change']].corr(), annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+    plt.savefig('heatmap.png')
+    plt.close()
 
     results = find_importances(x_data, regr)
     display_table(['Rank', 'Feature', 'Importance'], results)
 
-    print(len(x_data.columns))
+    # print(len(x_data.columns))
+
+    print(predict(x_data, y_data, 1, 45, 45, 50, 1, 0, 25, 'Alexander B.'))
 
 main()
