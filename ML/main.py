@@ -1,38 +1,46 @@
+import joblib
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 from sklearn import tree
-from sklearn.svm import NuSVR
+from sklearn.svm import SVR
 from sklearn.dummy import DummyRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 
 DEPTH = 5
 RANDOM = 42
 SCORE = 'neg_root_mean_squared_error'
 
-def predict(x_data, y_data, final_starting_pos, race1_fastest_time, race1_min_fastest_time, race1_max_fastest_time, race1_gap_to_leader, race1_gap_to_leader_min, race1_gap_to_leader_max, driver_name):
-    model = NuSVR(kernel='linear').fit(x_data, y_data)
+def predict(final_starting_pos, driver_name, race1_fastest_time, race1_min_fastest_time, race1_max_fastest_time, final_temp):
+    columns = []
+    model = joblib.load('random_forest_model.pkl')
+
+    with open('column_names.txt', 'r') as file:
+        for line in file:
+            column_name = line.strip()
+            columns.append(column_name)
 
     race1_fastest_time = (race1_fastest_time - race1_min_fastest_time) / (race1_max_fastest_time - race1_min_fastest_time)
-    race1_gap_to_leader = (race1_gap_to_leader - race1_gap_to_leader_min) / (race1_gap_to_leader_max - race1_gap_to_leader_min)
 
-    manual_input = {
-    'Final Starting Pos': final_starting_pos,
-    'Race 1 Fastest Time': race1_fastest_time,
-    'Race 1 Gap to Leader': race1_gap_to_leader,
-    }
+    manual_input = {'Final Starting Pos': final_starting_pos, 'Race 1 Fastest Time': race1_fastest_time, 'Final Temp': final_temp}
 
-    for col in x_data.columns:
-        if 'Driver Name_' in col:
+    manual_input['Track - Lauda'] = False
+    manual_input['Track - Senna V1'] = False
+    manual_input['Track - Senna V2'] = False
+    manual_input['Track - VSK'] = False
+    manual_input['Track - Speed Vegas'] = True
+
+    for col in columns:
+        if col == 'Driver Name_' + driver_name:
+            manual_input[col] = True
+        elif 'Driver Name_' in col:
             manual_input[col] = False
-
-    manual_input['Driver Name_' + driver_name] = True
 
     input_df = pd.DataFrame([manual_input])
 
@@ -57,8 +65,8 @@ def preprocess_data(data):
         one_hot_encoded = pd.get_dummies(data[col], prefix=col)
         data = pd.concat([data, one_hot_encoded], axis=1)
 
-    x_data = data[['Final Starting Pos', 'Race 1 Fastest Time', 'Race 1 Gap to Leader'] +
-                  list(data.filter(regex='Driver Name_').columns)]
+    x_data = data[['Final Starting Pos', 'Race 1 Fastest Time', 'Final Temp'] +
+                  list(data.filter(regex='Driver Name_|Track').columns)]
     y_data = data['Final Finish Pos']
 
     return x_data, y_data
@@ -67,11 +75,11 @@ def conduct_experiments(x_data, y_data):
     results = []
 
     models = [(DummyRegressor(), 'BASELINE: Dummy Regressor'),
-              (KNeighborsRegressor(), 'KNN: K-Nearest Neighbors'),
-              (NuSVR(kernel='linear'), 'SVM (Support Vector Machine)'),
+              (KNeighborsRegressor(n_neighbors=21, weights='distance'), 'KNN: K-Nearest Neighbors'),
+              (SVR(kernel='linear'), 'SVM'),
               (GradientBoostingRegressor(random_state=RANDOM), 'Gradient Boosting'),
               (RandomForestRegressor(random_state=RANDOM, max_depth=DEPTH), 'Random Forest'),
-              (MLPRegressor(random_state=RANDOM, activation='identity', solver='sgd', learning_rate='adaptive', max_iter=3200), 'Neural Network')]
+              (MLPRegressor(random_state=RANDOM, activation='identity', max_iter=3200), 'Neural Network')]
     for model, name in models:
         results.append((-1 * cross_val_score(model, x_data, y_data, scoring=SCORE).mean(), name))
 
@@ -80,7 +88,7 @@ def conduct_experiments(x_data, y_data):
 
 def find_importances(x_data, regr):
     results = []
-    importances = {'Driver Name': 0}
+    importances = {'Driver Name': 0, 'Race 1 Kart Num': 0, 'Final Kart Num': 0, 'Track': 0}
 
     for i, col in enumerate(x_data.columns):
         key_present = False
@@ -123,6 +131,8 @@ def main():
     x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, random_state=RANDOM)
     regr = RandomForestRegressor(random_state=RANDOM, max_depth=DEPTH).fit(x_train, y_train)
 
+    joblib.dump(regr, 'random_forest_model.pkl')
+
     y_pred = regr.predict(x_test)
 
     x_test['predicted'] = y_pred
@@ -144,8 +154,11 @@ def main():
     results = find_importances(x_data, regr)
     display_table(['Rank', 'Feature', 'Importance'], results)
 
+    with open('column_names.txt', 'w') as file:
+        for column in x_data.columns:
+            file.write(column + '\n')
+
     # print(len(x_data.columns))
 
-    print(predict(x_data, y_data, 1, 45, 45, 50, 1, 0, 25, 'Alexander B.'))
-
-main()
+# main()
+print(predict(3, 'Alexander B.', 45.5, 45, 47, 90))

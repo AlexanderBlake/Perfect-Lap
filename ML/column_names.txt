@@ -1,0 +1,83 @@
+Final Starting Pos
+Race 1 Fastest Time
+Final Temp
+Track - Lauda
+Track - Senna V1
+Track - Senna V2
+Track - VSK
+Track - Speed Vegas
+Driver Name_Aaron F.
+Driver Name_Adryen R.
+Driver Name_Ahmed E.
+Driver Name_Aiden C.
+Driver Name_Alex F.
+Driver Name_Alex R.
+Driver Name_Alexander B.
+Driver Name_Alexander N.
+Driver Name_Andrew V.
+Driver Name_Austin F.
+Driver Name_Ausum K.
+Driver Name_Benjamin H.
+Driver Name_Brandon C.
+Driver Name_Christian M.
+Driver Name_Cyrus D.
+Driver Name_Dale081
+Driver Name_Daniel G.
+Driver Name_David M.
+Driver Name_David Me.
+Driver Name_Dax V.
+Driver Name_Dylan K.
+Driver Name_Emerson T.
+Driver Name_Eric S.
+Driver Name_Evan R.
+Driver Name_Ever R.
+Driver Name_Fabian V.
+Driver Name_Gatica D.
+Driver Name_Graeman8
+Driver Name_Gregory F.
+Driver Name_Jack M.
+Driver Name_Jackson H.
+Driver Name_Jacob A.
+Driver Name_Jacob H.
+Driver Name_Jacob J.
+Driver Name_Jacob K.
+Driver Name_James B.
+Driver Name_Jason M.
+Driver Name_Jeff S.
+Driver Name_Jevin N.
+Driver Name_Johnthan C.
+Driver Name_Jose A.
+Driver Name_Karl G.
+Driver Name_Kent R.
+Driver Name_Kirk D.
+Driver Name_Kumo
+Driver Name_Lane F.
+Driver Name_Lucas T.
+Driver Name_Mark H.
+Driver Name_Mark L.
+Driver Name_Matias A.
+Driver Name_Matis T.
+Driver Name_Matt W.
+Driver Name_Michael F.
+Driver Name_Michael H.
+Driver Name_Mitch T.
+Driver Name_Noah A.
+Driver Name_Parker W.
+Driver Name_Patrick H.
+Driver Name_Power Surge
+Driver Name_Putze M.
+Driver Name_Raymond L.
+Driver Name_Riley S.
+Driver Name_Roddy B.
+Driver Name_Romain M.
+Driver Name_Scott B.
+Driver Name_Shane W.
+Driver Name_Sport Mode
+Driver Name_Steven B.
+Driver Name_Steven H.
+Driver Name_Turner D.
+Driver Name_Tyler S.
+Driver Name_Victor V.
+Driver Name_Waqar M.
+Driver Name_William Y.
+Driver Name_Zachary A.
